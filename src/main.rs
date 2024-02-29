@@ -149,6 +149,9 @@ pub struct Cook {
     /// the `cargo-zigbuild` crate and the Zig compiler toolchain separately
     #[clap(long)]
     zigbuild: bool,
+    /// Perform cargo-chef preparation steps, but don't actually build
+    #[clap(long)]
+    no_build: bool,
 }
 
 fn _main() -> Result<(), anyhow::Error> {
@@ -189,6 +192,7 @@ fn _main() -> Result<(), anyhow::Error> {
             bin,
             zigbuild,
             bins,
+            no_build,
         }) => {
             if std::io::stdout().is_terminal() {
                 eprintln!("WARNING stdout appears to be a terminal.");
@@ -287,6 +291,7 @@ fn _main() -> Result<(), anyhow::Error> {
                     frozen,
                     verbose,
                     bins,
+                    no_build
                 })
                 .context("Failed to cook recipe.")?;
         }

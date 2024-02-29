@@ -45,6 +45,7 @@ pub struct CookArgs {
     pub no_std: bool,
     pub bin: Option<Vec<String>>,
     pub bins: bool,
+    pub no_build: bool,
 }
 
 impl Recipe {
@@ -57,7 +58,9 @@ impl Recipe {
         let current_directory = std::env::current_dir()?;
         self.skeleton
             .build_minimum_project(&current_directory, args.no_std)?;
-        build_dependencies(&args);
+        if !args.no_build {
+            build_dependencies(&args);
+        }
         self.skeleton
             .remove_compiled_dummies(
                 current_directory,
@@ -111,6 +114,7 @@ fn build_dependencies(args: &CookArgs) {
         bin,
         no_std: _no_std,
         bins,
+        no_build: _no_build,
     } = args;
     let cargo_path = std::env::var("CARGO").expect("The `CARGO` environment variable was not set. This is unexpected: it should always be provided by `cargo` when invoking a custom sub-command, allowing `cargo-chef` to correctly detect which toolchain should be used. Please file a bug.");
     let mut command = Command::new(cargo_path);
